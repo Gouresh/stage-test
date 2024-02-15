@@ -1,0 +1,43 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Uploader</title>
+  </head>
+  <body>
+    <h2>File Upload Service</h2>
+    <input type="file" id="file" />
+    <button id="upload">Upload</button>
+    <br />
+    <br/>
+    <div id="status"></div>
+
+    <script>
+      const upload = document.getElementById("upload");
+      const status = document.getElementById("status");
+
+      upload.addEventListener("click", () => {
+        status.innerHTML = "File Selected"
+        const fileInput = document.getElementById("file");
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append("avatar", file);
+        status.innerHTML = "Uploading File ..."
+        fetch("/upload", {
+          method: "POST",
+          body: formData,
+        })
+          .then(async (response) => {
+              const data = await response.json();
+              console.log(data)
+              if(response.ok){
+                status.innerHTML = data.file
+              } else {
+                status.innerHTML = data.error
+              }
+            
+          })
+      });
+    </script>
+  </body>
+</html>
